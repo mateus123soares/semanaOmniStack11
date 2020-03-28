@@ -1,12 +1,12 @@
 
 const connection = require("../database/connection");
-const crytop = require("crypto");
+const genereteUniqueId = require("../utils/generateUniqueId");
 
 module.exports = {
     async create(req, res) {
         const { name, email, whatsapp, uf, city } = req.body;
 
-        const id = crytop.randomBytes(4).toString('HEX');
+        const id = genereteUniqueId();
 
         await connection('ongs').insert({
             id,
