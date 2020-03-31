@@ -1,4 +1,5 @@
 const connection = require("../database/connection");
+const generateToken = require('../utils/generateToken');
 
 module.exports = {
     async create(req,res){
@@ -8,6 +9,7 @@ module.exports = {
         if(!ong){
             return res.status(400).json({error:"No Ong found whit this id"})
         }
-        return res.json(ong);
+        
+        return res.json({ong,token:generateToken(id)});
     }
 }

@@ -20,7 +20,8 @@ export default function Logon() {
         try{
             const response = await api.post('session',{id});
             localStorage.setItem('ongId',id);
-            localStorage.setItem('ong',response.data.name);
+            localStorage.setItem('token',response.data.token);
+            localStorage.setItem('ong',response.data.ong.name);
             history.push('profile');
         }catch(err){
             alert("Falha no login, tente novamente");

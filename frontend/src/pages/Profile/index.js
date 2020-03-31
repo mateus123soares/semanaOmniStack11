@@ -1,5 +1,5 @@
-import React, {useState,useEffect} from 'react';
-import { Link,useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FiPower, FiTrash2 } from 'react-icons/fi'
 
 import api from "../../services/api";
@@ -13,32 +13,38 @@ export default function Profile() {
 
     const ongName = localStorage.getItem('ong');
     const ongId = localStorage.getItem('ongId');
+    const token = localStorage.getItem('token');
+
     const [incidents, setIncidents] = useState([]);
 
     useEffect(() => {
-        api.get('profile',{
-            headers: {
-                authorization: ongId
-            }
-        }).then(Response => {
-            setIncidents(Response.data);
-        })
-    }, [ongId])
+            api.get('profile', {
+                headers: {
+                    authorization: ongId,
+                    token: `Bearer ${token}`
+                }
+            }).then(Response => {
+                setIncidents(Response.data);
+            }).catch(Response =>{
+                alert("Erro de autorização");
+                history.push('/');
+            })
+    }, [ongId, token,history])
 
-    async function handleDeleteIncident(id){
-        try{
-            await api.delete(`incidents/${id}`,{
-                headers:{
-                    authorization:ongId
+    async function handleDeleteIncident(id) {
+        try {
+            await api.delete(`incidents/${id}`, {
+                headers: {
+                    authorization: ongId
                 }
             })
             setIncidents(incidents.filter(incident => incident.id !== id))
-        }catch(err){
+        } catch (err) {
             alert("Erro a deletar o caso, tente novamente");
         }
     }
 
-    function handleLogout(){
+    function handleLogout() {
         localStorage.clear();
         history.push('/');
     }
@@ -63,7 +69,7 @@ export default function Profile() {
                         <strong>Descrição:</strong>
                         <p>{incident.description}</p>
                         <strong>Valor:</strong>
-                        <p>{Intl.NumberFormat('pt-br',{style:'currency',currency:'BRL'}).format(incident.value)}</p>
+                        <p>{Intl.NumberFormat('pt-br', { style: 'currency', currency: 'BRL' }).format(incident.value)}</p>
                         <button onClick={() => handleDeleteIncident(incident.id)} type="button">
                             <FiTrash2 size={20} color="#a8a8b3" ></FiTrash2>
                         </button>

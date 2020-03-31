@@ -1,5 +1,6 @@
 const express = require('express');
-const { celebrate, Segments, Joi } = require('celebrate')
+const { celebrate, Segments, Joi } = require('celebrate');
+const auth = require('./middlewares/auth');
 
 const OngController = require("./controllers/OngControllers");
 const IncidentController = require("./controllers/IncidentController");
@@ -37,7 +38,7 @@ router.delete("/incidents/:id",celebrate({
     })    
 }),IncidentController.delete);
 
-router.get("/profile", celebrate({
+router.get("/profile",auth,celebrate({
     [Segments.HEADERS]: Joi.object({
         authorization: Joi.string().required()
     }).unknown(),
